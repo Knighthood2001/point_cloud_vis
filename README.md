@@ -41,7 +41,15 @@ wu@wu:~/catkin_ws$ rostopic echo /points_raw1/fields -n 1
 
 当你控制雷达进行旋转时，你可以观察到点云在可视化窗口中的变化。
 
+point_cloud_visualizer.cpp文件的功能是：
+订阅/points_raw1话题，只提取xyz并显示。
+
 ![Alt text](imgs/image.png)
+
+tf_point_cloud_ground_removal_visualizer.cpp文件的功能是:
+雷达坐标系转换到基坐标系，然后去除地面点云，最后转回到雷达坐标系并进行可视化。
+
+![Alt text](imgs/2.png)
 
 编译命令：
 ```shell
