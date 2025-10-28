@@ -39,6 +39,11 @@ wu@wu:~/catkin_ws$ rostopic echo /points_raw1/fields -n 1
 ```
 我这里只获取xyz信息。
 
+当你控制雷达进行旋转时，你可以观察到点云在可视化窗口中的变化。
+
+![Alt text](imgs/image.png)
+
+编译命令：
 ```shell
 cd ~/catkin_ws
 catkin_make -DCATKIN_WHITELIST_PACKAGES="point_cloud_vis"
