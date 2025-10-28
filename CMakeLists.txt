@@ -13,7 +13,18 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
 )
+find_package(PCL 1.9 REQUIRED COMPONENTS
+  common        # PCL基础组件
+  visualization # 可视化核心库（解决PCLVisualizer报错）
+  io            # 可选，若涉及点云读写
 
+)
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp sensor_msgs pcl_ros pcl_conversions
+  DEPENDS PCL  # 声明依赖PCL
+)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -119,6 +130,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -205,3 +217,16 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+# 链接PCL库目录
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+# 声明可执行文件（第一个参数：目标名，第二个：源文件）
+add_executable(point_cloud_visualizer src/point_cloud_visualizer.cpp)
+
+# 链接依赖库（将可执行文件与ROS库、PCL库绑定）
+target_link_libraries(point_cloud_visualizer
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
