@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   roscpp
   sensor_msgs
+  tf
 )
 find_package(PCL 1.9 REQUIRED COMPONENTS
   common        # PCL基础组件
@@ -19,11 +20,14 @@ find_package(PCL 1.9 REQUIRED COMPONENTS
   io            # 可选，若涉及点云读写
 
 )
+
+find_package(Eigen3 REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs pcl_ros pcl_conversions
-  DEPENDS PCL  # 声明依赖PCL
+  CATKIN_DEPENDS roscpp sensor_msgs pcl_ros pcl_conversions tf
+  DEPENDS PCL EIGEN3 # 声明依赖PCL和Eigen3
 )
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -131,6 +135,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}  # Eigen头文件路径
 )
 
 ## Declare a C++ library
@@ -224,9 +229,16 @@ add_definitions(${PCL_DEFINITIONS})
 
 # 声明可执行文件（第一个参数：目标名，第二个：源文件）
 add_executable(point_cloud_visualizer src/point_cloud_visualizer.cpp)
-
+add_executable(tf_point_cloud_ground_removal_visualizer src/tf_point_cloud_ground_removal_visualizer.cpp)
 # 链接依赖库（将可执行文件与ROS库、PCL库绑定）
 target_link_libraries(point_cloud_visualizer
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
+  ${EIGEN3_LIBRARIES}  # 链接Eigen库
+)
+target_link_libraries(
+  tf_point_cloud_ground_removal_visualizer
+  ${catkin_LIBRARIES}  # 包含 roscpp、tf、sensor_msgs 等 ROS 库
+  ${PCL_LIBRARIES}     # 包含 PCL 的 visualization、filters 等库
+  ${EIGEN3_LIBRARIES}  # Eigen 库（PCL 内部依赖）
 )
